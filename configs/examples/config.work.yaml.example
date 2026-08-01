@@ -1,0 +1,108 @@
+# Private work override for Orbit (EXAMPLE — copy, don't commit secrets)
+#
+# Usage:
+#   mkdir -p "$WORKSPACE_ROOT/.orbit"
+#   cp configs/examples/config.work.yaml.example "$WORKSPACE_ROOT/.orbit/config.work.yaml"
+#   edit the copy with your real board names, remotes hints, and verify profile
+#
+# Resolution: config.work.yaml wins over ~/.config/orbit/config.yaml
+# This filename is gitignored as **/.orbit/config.work.yaml
+
+configVersion: 1
+
+workspace:
+  root: ~/Documents/codebase
+  runs_dir: .orbit/runs
+  clone_if_missing: true
+
+tracker:
+  provider: jira
+  transition_enabled: true
+  # Replace with YOUR board's exact status names
+  status_map:
+    start: "In Progress"
+    local_test: "Local Test"
+    pr_review: "PR Review"
+    blocked: "Blocked"
+  comment_templates:
+    start: |
+      Orbit starting {{ticket}}.
+      {{brief_summary}}
+    blocked: |
+      Orbit blocked on {{ticket}}: {{reason}}
+    pr_ready: |
+      Draft PR(s) for {{ticket}}:
+      {{prs}}
+
+docs:
+  provider: confluence
+  follow_links_from_ticket: true
+  max_pages: 8
+
+forge:
+  provider: github
+  branch_template: "{{ticket}}/{{short-slug}}"
+  pr:
+    draft: true
+    labels: []
+    add_ticket_link: true
+    title_template: "{{ticket}}: {{summary}}"
+    body_template: |
+      ## Jira
+      {{ticket_url}}
+
+      ## Summary
+      {{summary}}
+
+      ## Test plan
+      {{test_plan}}
+
+      ## Screenshots / evidence
+      {{screenshots_section}}
+
+discovery:
+  require_ac: true
+  require_repos: true
+  require_test_strategy: true
+  ask_user_on_ambiguity: true
+
+verify:
+  mode: runbook_first
+  forbid_assume_unit_tests_only: true
+  # Example profile — rename/replace with your org's real verify path
+  default_profile: full_stack
+  profiles:
+    full_stack:
+      description: >
+        Replace with your org verify story (e.g. helm chart that brings up
+        the full stack in a cloud namespace). Keep agent_may_execute false
+        until you explicitly want Orbit to run those commands.
+      kind: helm
+      runbook_hints: ["helm", "namespace", "local test", "kubectl"]
+      prerequisites: ["VPN", "kubecontext", "cloud auth"]
+      agent_may_execute: false
+      success_signals: ["pods ready", "smoke checks from runbook"]
+    unit_local:
+      kind: local_commands
+      commands: ["make test"]
+      agent_may_execute: true
+      success_signals: ["tests exit 0"]
+
+efficiency:
+  two_pass: true
+  reuse_distill_if_fresh_hours: 24
+  max_doc_pages: 8
+  compact_context: true
+  stop_on_repeated_tool_error: true
+
+guardrails:
+  max_agent_steps: 80
+  max_total_tool_calls: 120
+  max_verify_retries: 3
+  dry_run: true
+  disallow_merge: true
+  plan_approval: on_multi_repo
+  redact_secret_patterns:
+    - "ghp_[A-Za-z0-9]+"
+    - "AKIA[0-9A-Z]+"
+    - "Bearer [A-Za-z0-9._\\-]+"

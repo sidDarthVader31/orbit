@@ -1,9 +1,10 @@
 # Configuration reference
 
-Orbit reads:
+Orbit reads (first match wins):
 
-1. `$workspace.root/.orbit/config.yaml` (override)
-2. `~/.config/orbit/config.yaml` (default)
+1. `$workspace.root/.orbit/config.work.yaml` — private work override (gitignored)
+2. `$workspace.root/.orbit/config.yaml` — workspace override
+3. `~/.config/orbit/config.yaml` — user default
 
 Schema: [`schemas/config.schema.yaml`](../schemas/config.schema.yaml) (`configVersion: 1`).
 
@@ -11,6 +12,15 @@ Validate:
 
 ```bash
 ./skill/orbit/scripts/validate_config.sh ~/.config/orbit/config.yaml
+# or:
+./skill/orbit/scripts/validate_config.sh "$WORKSPACE_ROOT/.orbit/config.work.yaml"
+```
+
+Private work file:
+
+```bash
+mkdir -p "$WORKSPACE_ROOT/.orbit"
+cp configs/examples/config.work.yaml.example "$WORKSPACE_ROOT/.orbit/config.work.yaml"
 ```
 
 ## Major sections
@@ -50,6 +60,7 @@ verify:
 - [`configs/examples/jira-github.basic.yaml`](../configs/examples/jira-github.basic.yaml)
 - [`configs/examples/jira-github.draft-pr-rich.yaml`](../configs/examples/jira-github.draft-pr-rich.yaml)
 - [`configs/examples/jira-github.dry-run.yaml`](../configs/examples/jira-github.dry-run.yaml)
+- [`configs/examples/config.work.yaml.example`](../configs/examples/config.work.yaml.example)
 
 ## Work overrides
 
@@ -59,4 +70,4 @@ Keep private work config out of git:
 $workspace.root/.orbit/config.work.yaml
 ```
 
-Documented pattern is gitignored via `**/config.work.yaml` and `**/.orbit/config.work.yaml`.
+Ignored via `**/.orbit/config.work.yaml` and `**/config.work.yaml`.
