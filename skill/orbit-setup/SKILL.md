@@ -29,7 +29,8 @@ Produce a valid `~/.config/orbit/config.yaml` (configVersion: 1) matching `schem
    - How does this org verify changes? Free text is OK (e.g. “helm chart wok on EKS”). Map into `verify.profiles` with `kind`, `runbook_hints`, `prerequisites`, and `agent_may_execute` (default **false** for heavy cluster bring-up).
    - Plan approval: `always` | `never` | `on_multi_repo`
    - Dry-run default?
-   - Two-pass distill efficiency on? (default yes)
+   - Layered-loops efficiency on? (default yes → `efficiency.layered_loops`)
+   - Max redistills on context gap? (default 1 → `efficiency.max_redistills`)
 
 4. Write config to `~/.config/orbit/config.yaml` with `configVersion: 1` and `guardrails.disallow_merge: true`.
 5. Optionally offer to also write `$workspace.root/.orbit/config.work.yaml` from `configs/examples/config.work.yaml.example` for private work overrides (remind: gitignored, never commit secrets).

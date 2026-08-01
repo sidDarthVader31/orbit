@@ -33,8 +33,18 @@ cp configs/examples/config.work.yaml.example "$WORKSPACE_ROOT/.orbit/config.work
 | `forge` | GitHub PR draft/labels/title/body/branch templates |
 | `discovery` | Required AC/repos/test strategy |
 | `verify` | Org test **profiles** (helm/k8s/local/…) |
-| `efficiency` | Two-pass distill, freshness, doc caps |
+| `efficiency` | Layered loops, redistill budget, freshness, doc caps |
 | `guardrails` | Step/tool budgets, dry-run, plan approval, redaction |
+
+## Efficiency
+
+| Key | Meaning |
+|---|---|
+| `layered_loops` | Prefer distill artifacts then execute (default true) |
+| `max_redistills` | Max replan returns to distill on context gap (default 1) |
+| `reuse_distill_if_fresh_hours` | Skip distill if fresh artifacts exist |
+| `max_doc_pages` | Cap Confluence fetches in distill |
+| `compact_context` | Prefer run artifacts over re-fetching raw docs |
 
 ## Verify profiles
 

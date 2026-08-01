@@ -12,5 +12,5 @@
 
 1. Set `guardrails.dry_run: true`
 2. Run a well-documented ticket
-3. Confirm `distill.md` has AC, repos, and test strategy
+3. Confirm distill-loop output (`distill.md`) has AC, repos, and test strategy
 4. Confirm no Jira transitions / PRs occurred

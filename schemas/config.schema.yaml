@@ -146,7 +146,8 @@ properties:
     type: object
     additionalProperties: false
     properties:
-      two_pass: { type: boolean, default: true }
+      layered_loops: { type: boolean, default: true }
+      max_redistills: { type: integer, minimum: 0, default: 1 }
       reuse_distill_if_fresh_hours: { type: integer, minimum: 0, default: 24 }
       max_doc_pages: { type: integer, minimum: 1, default: 8 }
       max_tool_calls_per_phase: { type: integer, minimum: 1 }

@@ -80,6 +80,7 @@
     },
     "tool_calls": { "type": "integer", "minimum": 0 },
     "verify_retries": { "type": "integer", "minimum": 0 },
+    "redistill_count": { "type": "integer", "minimum": 0 },
     "distill_path": { "type": "string" },
     "brief_path": { "type": "string" }
   }

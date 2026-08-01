@@ -47,12 +47,14 @@ Give Orbit a Jira ticket key. It discovers work from Jira + linked docs, ensures
         └───────────────┘         └───────────────┘
 ```
 
-### Two-pass loop (cost-aware)
+### Layered loops (cost-aware)
 
-| Pass | Name | What happens |
-|---|---|---|
-| **A** | Distill | Fetch ticket + docs once → write `distill.md` + `brief.json` (includes **test strategy**) |
-| **B** | Execute | Reload artifacts (don’t re-crawl docs) → repos → implement → verify → draft PR → Jira → scorecard |
+| Loop | What happens |
+|---|---|
+| **Outer** | Phase machine in `run.json` |
+| **Distill** | Research until `distill.md` + `brief.json` validate (includes **test strategy**) |
+| **Execute** | Reload artifacts → repos → implement → verify (retry) → draft PR → Jira → scorecard |
+| **Replan** | On context gap, re-enter distill up to `efficiency.max_redistills` |
 
 ### Phase machine
 
@@ -72,7 +74,7 @@ verify → open_prs → tracker_pr_review → scorecard → done | blocked | fai
 | Cursor Agent | The agentic **loop** runtime |
 | Run folder | Durable memory + judgment |
 
-Details: [docs/architecture.md](docs/architecture.md) · [docs/presentation-faq.md](docs/presentation-faq.md)
+Details: [docs/architecture.md](docs/architecture.md)
 
 ---
 
@@ -128,7 +130,7 @@ You will set:
 - Whether to transition tickets or comment-only
 - PR draft flag, labels, title/body templates
 - How your org **verifies** changes (e.g. helm full-stack env) → `verify.profiles`
-- Plan approval, dry-run, two-pass efficiency
+- Plan approval, dry-run, layered-loops efficiency
 
 Writes: `~/.config/orbit/config.yaml` (`configVersion: 1`).
 
@@ -201,7 +203,7 @@ Under `workspace.root/.orbit/runs/<ticket>-<timestamp>/`:
 
 | File | Purpose |
 |---|---|
-| `distill.md` | Pass A human digest (reload in Pass B) |
+| `distill.md` | Distill-loop human digest (reload in execute loop) |
 | `brief.json` | Structured goal + `test_strategy` |
 | `plan.md` | Implementation plan |
 | `run.json` | Phase / PR / transition state |
@@ -233,7 +235,7 @@ See [docs/work-validation.md](docs/work-validation.md).
 
 | Concern | Mechanism |
 |---|---|
-| Fewer AI tokens | `efficiency.two_pass`, reuse fresh `distill.md`, `max_doc_pages`, `compact_context` |
+| Fewer AI tokens | `efficiency.layered_loops`, reuse fresh `distill.md`, `max_doc_pages`, `compact_context`, `max_redistills` |
 | Hard spend caps | `guardrails.max_agent_steps`, `max_total_tool_calls`, `max_verify_retries` |
 | Safety | `disallow_merge`, dry-run, repo allowlist, secret redaction |
 | Org testing | `verify.profiles` + runbook-first — never assume `make test` only |
@@ -245,11 +247,10 @@ See [docs/work-validation.md](docs/work-validation.md).
 | Doc | Topic |
 |---|---|
 | [docs/quickstart.md](docs/quickstart.md) | Short path to first run |
-| [docs/architecture.md](docs/architecture.md) | System layers |
+| [docs/architecture.md](docs/architecture.md) | Layered loops + system layers |
 | [docs/configuration.md](docs/configuration.md) | Full config reference |
 | [docs/work-validation.md](docs/work-validation.md) | Private work testing protocol |
 | [docs/threat-model.md](docs/threat-model.md) | Security assumptions |
-| [docs/presentation-faq.md](docs/presentation-faq.md) | Skill vs agentic system |
 | [docs/release-checklist.md](docs/release-checklist.md) | Cut a release |
 | [SECURITY.md](SECURITY.md) / [SUPPORT.md](SUPPORT.md) | Reporting & support scope |
 

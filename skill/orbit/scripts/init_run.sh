@@ -51,6 +51,7 @@ cat > "$RUN_DIR/run.json" <<EOF
   "prs": [],
   "tool_calls": 0,
   "verify_retries": 0,
+  "redistill_count": 0,
   "distill_path": "distill.md",
   "brief_path": "brief.json"
 }

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/sidDarthVader31/orbit/schemas/brief.schema.json",
   "title": "OrbitBrief",
-  "description": "Machine-readable distill of a ticket + runbooks for Pass B execution.",
+  "description": "Machine-readable distill of a ticket + runbooks for the execute loop.",
   "type": "object",
   "required": ["ticket", "summary", "ac", "repos", "test_strategy", "confidence"],
   "additionalProperties": false,

@@ -46,7 +46,8 @@ verify:
       success_signals: ["tests exit 0"]
 
 efficiency:
-  two_pass: true
+  layered_loops: true
+  max_redistills: 1
   reuse_distill_if_fresh_hours: 24
   max_doc_pages: 5
   compact_context: true

@@ -1,6 +1,6 @@
 # Discovery guide
 
-Orbit must learn **what to build** and **how this org verifies** before coding.
+Orbit must learn **what to build** and **how this org verifies** before the execute loop starts (during the distill loop).
 
 ## Sources (priority)
 

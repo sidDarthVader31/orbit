@@ -18,4 +18,4 @@ Orbit is an open-source, Cursor-hosted ticket agent.
 ## Where to get help
 
 - GitHub Issues for bugs/features
-- Read `docs/presentation-faq.md` for skill-vs-system questions
+- See [docs/architecture.md](docs/architecture.md) for layered loops and skill vs system

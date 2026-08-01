@@ -15,8 +15,9 @@ Before tagging a public release:
 
 - [x] Example configs validate (local + CI workflow)
 - [x] Synthetic fixture documented (`tests/fixtures/synthetic-ticket/`)
-- [x] Distill/execute prompts tightened in `skill/orbit/SKILL.md`
+- [x] Distill/execute framed as layered loops in `skill/orbit/SKILL.md`
 - [x] Private work template: `configs/examples/config.work.yaml.example`
+- [x] Schema/examples rename `two_pass` → `layered_loops` + `max_redistills`
 - [ ] CI green on `main` after push (check Actions)
 - [ ] Dry-run against a real work ticket (private; not required to cut scaffold tag)
 

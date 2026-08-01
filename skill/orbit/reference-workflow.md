@@ -2,9 +2,19 @@
 
 ## Config locations
 
-1. `$workspace.root/.orbit/config.yaml` (override)
-2. `~/.config/orbit/config.yaml` (user default)
-3. Examples in repo `configs/examples/`
+1. `$workspace.root/.orbit/config.work.yaml` — private work override (gitignored; wins)
+2. `$workspace.root/.orbit/config.yaml` — workspace override
+3. `~/.config/orbit/config.yaml` — user default
+4. Examples in repo `configs/examples/`
+
+## Layered loops
+
+| Layer | Artifact / control |
+|---|---|
+| Outer | `run.json` phases |
+| Distill loop | `distill.md`, `brief.json` |
+| Execute loop | code, verify, PRs |
+| Replan | `redistill_count` vs `efficiency.max_redistills` |
 
 ## Distill.md contract
 
@@ -28,7 +38,7 @@
 ## Confidence
 ```
 
-Keep it short enough to reload cheaply in Pass B. Do not paste entire Confluence pages — summarize.
+Keep it short enough to reload cheaply in the execute loop. Do not paste entire Confluence pages — summarize.
 
 ## brief.json
 
@@ -36,7 +46,7 @@ Must validate against `schemas/brief.schema.json`. Always include `test_strategy
 
 ## run.json
 
-Must track `phase`, `transitions[]`, `prs[]`, `tool_calls`, `verify_retries`, `error_code`.
+Must track `phase`, `transitions[]`, `prs[]`, `tool_calls`, `verify_retries`, `redistill_count`, `error_code`.
 
 ## Status names
 
@@ -57,4 +67,4 @@ If user provides a run id or latest run for ticket:
 1. Read `run.json`
 2. Skip completed phases
 3. Do not duplicate PR URLs already listed
-4. Re-distill only if older than `efficiency.reuse_distill_if_fresh_hours` or forced
+4. Re-enter distill only if older than `efficiency.reuse_distill_if_fresh_hours`, forced by user, or replan edge with remaining `max_redistills`

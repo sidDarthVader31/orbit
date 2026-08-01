@@ -20,7 +20,7 @@
 | Secret leakage | Redaction patterns; forbid dumping `.env` into comments |
 | Arbitrary repo clone | Optional `repo_allowlist`; clone only under workspace root |
 | Destructive git | No force-push; no merge; draft PR default |
-| Cost blowups | `max_agent_steps`, `max_total_tool_calls`, two-pass distill |
+| Cost blowups | `max_agent_steps`, `max_total_tool_calls`, layered loops + `max_redistills` |
 | Heavy cluster accidents | `agent_may_execute: false` by default for helm/k8s profiles |
 
 ## Reporting
