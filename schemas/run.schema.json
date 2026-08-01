@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/sidDarthVader31/orbit/schemas/run.schema.json",
+  "title": "OrbitRun",
+  "description": "Durable phase state for one Orbit ticket run.",
+  "type": "object",
+  "required": ["run_id", "ticket", "phase", "status", "created_at", "orbit_version"],
+  "additionalProperties": false,
+  "properties": {
+    "run_id": { "type": "string" },
+    "ticket": { "type": "string" },
+    "phase": {
+      "type": "string",
+      "enum": [
+        "setup_check",
+        "preflight",
+        "distill",
+        "brief_validate",
+        "ensure_repos",
+        "plan_approval",
+        "tracker_start",
+        "implement",
+        "tracker_local_test",
+        "verify",
+        "open_prs",
+        "tracker_pr_review",
+        "scorecard",
+        "done",
+        "blocked",
+        "failed"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": ["running", "waiting_human", "done", "blocked", "failed"]
+    },
+    "error_code": {
+      "type": ["string", "null"],
+      "enum": [
+        null,
+        "CONFIG_INVALID",
+        "PREFLIGHT_FAILED",
+        "BRIEF_INCOMPLETE",
+        "CLONE_FAILED",
+        "VERIFY_FAILED",
+        "FORGE_FAILED",
+        "TRACKER_FAILED",
+        "BUDGET_EXCEEDED",
+        "USER_ABORTED"
+      ]
+    },
+    "created_at": { "type": "string" },
+    "updated_at": { "type": "string" },
+    "orbit_version": { "type": "string" },
+    "dry_run": { "type": "boolean" },
+    "transitions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["phase", "status_name", "at"],
+        "properties": {
+          "phase": { "type": "string" },
+          "status_name": { "type": "string" },
+          "at": { "type": "string" },
+          "ok": { "type": "boolean" }
+        }
+      }
+    },
+    "prs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["repo", "url"],
+        "properties": {
+          "repo": { "type": "string" },
+          "url": { "type": "string" },
+          "branch": { "type": "string" }
+        }
+      }
+    },
+    "tool_calls": { "type": "integer", "minimum": 0 },
+    "verify_retries": { "type": "integer", "minimum": 0 },
+    "distill_path": { "type": "string" },
+    "brief_path": { "type": "string" }
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/sidDarthVader31/orbit/schemas/brief.schema.json",
+  "title": "OrbitBrief",
+  "description": "Machine-readable distill of a ticket + runbooks for Pass B execution.",
+  "type": "object",
+  "required": ["ticket", "summary", "ac", "repos", "test_strategy", "confidence"],
+  "additionalProperties": false,
+  "properties": {
+    "ticket": { "type": "string", "minLength": 1 },
+    "summary": { "type": "string" },
+    "ticket_url": { "type": "string" },
+    "ac": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "repos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string" },
+          "remote": { "type": "string" },
+          "path": { "type": "string" },
+          "default_branch": { "type": "string" }
+        }
+      }
+    },
+    "test_strategy": {
+      "type": "object",
+      "required": ["kind", "steps", "agent_may_execute", "success_signals"],
+      "additionalProperties": false,
+      "properties": {
+        "profile": { "type": "string" },
+        "kind": {
+          "type": "string",
+          "enum": ["local_commands", "helm", "k8s", "docker_compose", "remote_script", "custom"]
+        },
+        "steps": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1
+        },
+        "prerequisites": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "agent_may_execute": { "type": "boolean" },
+        "success_signals": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1
+        }
+      }
+    },
+    "pr_notes": { "type": "string" },
+    "doc_sources": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "open_questions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["high", "medium", "low"]
+    }
+  }
+}

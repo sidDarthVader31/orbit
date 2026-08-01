@@ -1,0 +1,15 @@
+.DS_Store
+.env
+.env.*
+!.env.example
+*.pem
+.idea/
+.vscode/
+**/.orbit/config.work.yaml
+**/.orbit/runs/
+**/config.work.yaml
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/

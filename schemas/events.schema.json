@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/sidDarthVader31/orbit/schemas/events.schema.json",
+  "title": "OrbitEvent",
+  "description": "One line in events.jsonl for a run.",
+  "type": "object",
+  "required": ["ts", "phase", "type", "ok"],
+  "additionalProperties": false,
+  "properties": {
+    "ts": { "type": "string" },
+    "phase": { "type": "string" },
+    "type": {
+      "type": "string",
+      "enum": [
+        "phase_enter",
+        "phase_exit",
+        "tool",
+        "decision",
+        "gate",
+        "error",
+        "human_wait",
+        "info"
+      ]
+    },
+    "tool": { "type": "string" },
+    "ok": { "type": "boolean" },
+    "detail": { "type": "string" }
+  }
+}

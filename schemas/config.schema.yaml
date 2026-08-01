@@ -1,0 +1,197 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$id: "https://github.com/sidDarthVader31/orbit/schemas/config.schema.yaml"
+title: OrbitConfig
+description: User/org policy for the Orbit Cursor ticket agent. No org-specific values belong in skills.
+type: object
+required:
+  - configVersion
+  - workspace
+  - tracker
+  - forge
+additionalProperties: false
+properties:
+  configVersion:
+    type: integer
+    const: 1
+    description: Schema version. Reject unknown versions with upgrade guidance.
+  workspace:
+    type: object
+    required: [root]
+    additionalProperties: false
+    properties:
+      root:
+        type: string
+        minLength: 1
+        description: Absolute or ~ path where repos are cloned/ensured
+      runs_dir:
+        type: string
+        default: ".orbit/runs"
+      clone_if_missing:
+        type: boolean
+        default: true
+      default_branch_strategy:
+        type: string
+        enum: [repo_default, fixed]
+        default: repo_default
+      fixed_default_branch:
+        type: string
+  tracker:
+    type: object
+    required: [provider, status_map]
+    additionalProperties: false
+    properties:
+      provider:
+        type: string
+        enum: [jira]
+      project_keys:
+        type: array
+        items: { type: string }
+      transition_enabled:
+        type: boolean
+        default: true
+      status_map:
+        type: object
+        required: [start, local_test, pr_review]
+        additionalProperties: false
+        properties:
+          start: { type: string, minLength: 1 }
+          local_test: { type: string, minLength: 1 }
+          pr_review: { type: string, minLength: 1 }
+          blocked: { type: string }
+      comment_templates:
+        type: object
+        additionalProperties: false
+        properties:
+          start: { type: string }
+          blocked: { type: string }
+          pr_ready: { type: string }
+      ac_field: { type: string }
+      link_types_for_docs:
+        type: array
+        items: { type: string }
+  docs:
+    type: object
+    additionalProperties: false
+    properties:
+      provider:
+        type: string
+        enum: [confluence]
+        default: confluence
+      follow_links_from_ticket:
+        type: boolean
+        default: true
+      max_pages:
+        type: integer
+        minimum: 1
+        default: 8
+  forge:
+    type: object
+    required: [provider, pr]
+    additionalProperties: false
+    properties:
+      provider:
+        type: string
+        enum: [github]
+      pr:
+        type: object
+        required: [title_template, body_template]
+        additionalProperties: false
+        properties:
+          draft: { type: boolean, default: true }
+          labels:
+            type: array
+            items: { type: string }
+            default: []
+          title_template: { type: string, minLength: 1 }
+          body_template: { type: string, minLength: 1 }
+          reviewers:
+            type: array
+            items: { type: string }
+          team_reviewers:
+            type: array
+            items: { type: string }
+          add_ticket_link: { type: boolean, default: true }
+      branch_template:
+        type: string
+        default: "{{ticket}}/{{short-slug}}"
+      commit_message_template: { type: string }
+  discovery:
+    type: object
+    additionalProperties: false
+    properties:
+      require_ac: { type: boolean, default: true }
+      require_repos: { type: boolean, default: true }
+      require_test_strategy: { type: boolean, default: true }
+      ask_user_on_ambiguity: { type: boolean, default: true }
+      repo_name_hints:
+        type: array
+        items: { type: string }
+  verify:
+    type: object
+    additionalProperties: false
+    properties:
+      mode:
+        type: string
+        enum: [runbook_first, config_profile, hybrid]
+        default: runbook_first
+      forbid_assume_unit_tests_only:
+        type: boolean
+        default: true
+      default_profile: { type: string }
+      profiles:
+        type: object
+        additionalProperties:
+          $ref: "#/$defs/verifyProfile"
+  efficiency:
+    type: object
+    additionalProperties: false
+    properties:
+      two_pass: { type: boolean, default: true }
+      reuse_distill_if_fresh_hours: { type: integer, minimum: 0, default: 24 }
+      max_doc_pages: { type: integer, minimum: 1, default: 8 }
+      max_tool_calls_per_phase: { type: integer, minimum: 1 }
+      compact_context: { type: boolean, default: true }
+      stop_on_repeated_tool_error: { type: boolean, default: true }
+  guardrails:
+    type: object
+    additionalProperties: false
+    properties:
+      max_agent_steps: { type: integer, minimum: 1, default: 80 }
+      max_total_tool_calls: { type: integer, minimum: 1, default: 120 }
+      max_verify_retries: { type: integer, minimum: 0, default: 3 }
+      dry_run: { type: boolean, default: false }
+      repo_allowlist:
+        type: array
+        items: { type: string }
+      disallow_merge: { type: boolean, const: true, default: true }
+      redact_secret_patterns:
+        type: array
+        items: { type: string }
+      plan_approval:
+        type: string
+        enum: [always, never, on_multi_repo]
+        default: on_multi_repo
+
+$defs:
+  verifyProfile:
+    type: object
+    required: [kind]
+    additionalProperties: false
+    properties:
+      description: { type: string }
+      kind:
+        type: string
+        enum: [local_commands, helm, k8s, docker_compose, remote_script, custom]
+      commands:
+        type: array
+        items: { type: string }
+      runbook_hints:
+        type: array
+        items: { type: string }
+      prerequisites:
+        type: array
+        items: { type: string }
+      agent_may_execute: { type: boolean, default: false }
+      success_signals:
+        type: array
+        items: { type: string }

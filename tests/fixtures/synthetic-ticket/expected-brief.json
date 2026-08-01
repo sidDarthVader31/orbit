@@ -1,0 +1,29 @@
+{
+  "ticket": "ORB-1",
+  "summary": "Add healthcheck endpoint to sample service",
+  "ticket_url": "https://example.invalid/browse/ORB-1",
+  "ac": [
+    "GET /healthz returns 200",
+    "Unit test covers the handler",
+    "Docs mention the endpoint"
+  ],
+  "repos": [
+    {
+      "name": "sample-service",
+      "remote": "https://github.com/example/sample-service.git",
+      "path": "sample-service"
+    }
+  ],
+  "test_strategy": {
+    "profile": "unit_local",
+    "kind": "local_commands",
+    "steps": ["make test"],
+    "prerequisites": [],
+    "agent_may_execute": true,
+    "success_signals": ["tests exit 0"]
+  },
+  "pr_notes": "Include test plan in PR body",
+  "doc_sources": ["tests/fixtures/synthetic-ticket/runbook.md"],
+  "open_questions": [],
+  "confidence": "high"
+}

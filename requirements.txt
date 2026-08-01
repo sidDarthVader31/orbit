@@ -1,0 +1,3 @@
+# Python deps for Orbit scripts (optional local; CI installs these)
+PyYAML>=6.0
+jsonschema>=4.0

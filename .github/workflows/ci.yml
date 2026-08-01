@@ -1,0 +1,28 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install deps
+        run: pip install pyyaml jsonschema
+      - name: Validate example configs
+        run: |
+          chmod +x skill/orbit/scripts/*.sh scripts/*.sh
+          for f in configs/examples/*.yaml; do
+            echo "Validating $f"
+            ./skill/orbit/scripts/validate_config.sh "$f"
+          done
+      - name: Shellcheck
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
+          shellcheck scripts/*.sh skill/orbit/scripts/*.sh
