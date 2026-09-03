@@ -25,5 +25,6 @@
   "pr_notes": "Include test plan in PR body",
   "doc_sources": ["tests/fixtures/synthetic-ticket/runbook.md"],
   "open_questions": [],
-  "confidence": "high"
+  "confidence": "high",
+  "discovery_source": "mixed"
 }

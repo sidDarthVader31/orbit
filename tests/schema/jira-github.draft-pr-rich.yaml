@@ -44,10 +44,13 @@ forge:
       {{screenshots_section}}
 
 discovery:
-  require_ac: true
-  require_repos: true
-  require_test_strategy: true
+  require_ac: false
+  require_repos: false
+  require_test_strategy: false
   ask_user_on_ambiguity: true
+  infer_from_title: true
+  codebase_fallback: true
+  thin_ticket_plan_approval: always
 
 verify:
   mode: runbook_first
@@ -75,6 +78,9 @@ efficiency:
   reuse_distill_if_fresh_hours: 24
   max_doc_pages: 8
   compact_context: true
+  lean_context: false
+  skip_confluence_if_no_links: true
+  stop_on_repeated_tool_error: true
 
 guardrails:
   max_agent_steps: 80

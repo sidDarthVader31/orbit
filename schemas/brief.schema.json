@@ -4,7 +4,7 @@
   "title": "OrbitBrief",
   "description": "Machine-readable distill of a ticket + runbooks for the execute loop.",
   "type": "object",
-  "required": ["ticket", "summary", "ac", "repos", "test_strategy", "confidence"],
+  "required": ["ticket", "summary", "ac", "repos", "test_strategy", "confidence", "discovery_source"],
   "additionalProperties": false,
   "properties": {
     "ticket": { "type": "string", "minLength": 1 },
@@ -67,6 +67,10 @@
     "confidence": {
       "type": "string",
       "enum": ["high", "medium", "low"]
+    },
+    "discovery_source": {
+      "type": "string",
+      "enum": ["confluence", "ticket_body", "inferred_title", "codebase_fallback", "mixed"]
     }
   }
 }

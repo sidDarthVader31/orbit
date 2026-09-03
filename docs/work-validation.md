@@ -15,11 +15,12 @@ cp /path/to/orbit/configs/examples/config.work.yaml.example \
 
 ## Protocol
 
-1. Start with `guardrails.dry_run: true` in the work config
-2. Dry-run 3 tickets (bug, feature, chore) — inspect `distill.md` quality
-3. Flip dry-run off for one low-risk ticket → draft PR → fill scorecard
-4. Track: brief-block rate, verify outcomes, accept / accept_with_edits / reject
-5. Tighten `verify.profiles` / PR templates from failure codes — not skill hardcoding
+1. Start with `guardrails.dry_run: true` in the work config (or use `jira-github.lean.yaml` for token savings)
+2. Dry-run 3 tickets (bug, feature, chore) — inspect `distill.md` quality and `brief.discovery_source` / `confidence`
+3. Thin tickets should produce inferred briefs with plan approval — not always `BRIEF_INCOMPLETE`
+4. Flip dry-run off for one low-risk ticket → draft PR → fill scorecard
+5. Track: brief-block rate, verify outcomes, accept / accept_with_edits / reject
+6. Tighten `verify.profiles` / PR templates from failure codes — not skill hardcoding
 
 ## Data boundary
 

@@ -83,7 +83,7 @@ properties:
       max_pages:
         type: integer
         minimum: 1
-        default: 8
+        default: 3
   forge:
     type: object
     required: [provider, pr]
@@ -119,10 +119,16 @@ properties:
     type: object
     additionalProperties: false
     properties:
-      require_ac: { type: boolean, default: true }
-      require_repos: { type: boolean, default: true }
-      require_test_strategy: { type: boolean, default: true }
+      require_ac: { type: boolean, default: false }
+      require_repos: { type: boolean, default: false }
+      require_test_strategy: { type: boolean, default: false }
       ask_user_on_ambiguity: { type: boolean, default: true }
+      infer_from_title: { type: boolean, default: true }
+      codebase_fallback: { type: boolean, default: true }
+      thin_ticket_plan_approval:
+        type: string
+        enum: [always, never, on_multi_repo]
+        default: always
       repo_name_hints:
         type: array
         items: { type: string }
@@ -149,9 +155,11 @@ properties:
       layered_loops: { type: boolean, default: true }
       max_redistills: { type: integer, minimum: 0, default: 1 }
       reuse_distill_if_fresh_hours: { type: integer, minimum: 0, default: 24 }
-      max_doc_pages: { type: integer, minimum: 1, default: 8 }
+      max_doc_pages: { type: integer, minimum: 1, default: 3 }
       max_tool_calls_per_phase: { type: integer, minimum: 1 }
       compact_context: { type: boolean, default: true }
+      lean_context: { type: boolean, default: true }
+      skip_confluence_if_no_links: { type: boolean, default: true }
       stop_on_repeated_tool_error: { type: boolean, default: true }
   guardrails:
     type: object

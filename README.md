@@ -52,7 +52,7 @@ Give Orbit a Jira ticket key. It discovers work from Jira + linked docs, ensures
 | Loop | What happens |
 |---|---|
 | **Outer** | Phase machine in `run.json` |
-| **Distill** | Research until `distill.md` + `brief.json` validate (includes **test strategy**) |
+| **Distill** | Research until `distill.md` + `brief.json` validate (cascade: Confluence → ticket → infer → codebase) |
 | **Execute** | Reload artifacts → repos → implement → verify (retry) → draft PR → Jira → scorecard |
 | **Replan** | On context gap, re-enter distill up to `efficiency.max_redistills` |
 
@@ -145,7 +145,8 @@ cp configs/examples/jira-github.basic.yaml ~/.config/orbit/config.yaml
 
 | Example | Use when |
 |---|---|
-| [`configs/examples/jira-github.basic.yaml`](configs/examples/jira-github.basic.yaml) | Minimal Jira + GitHub |
+| [`configs/examples/jira-github.basic.yaml`](configs/examples/jira-github.basic.yaml) | Minimal Jira + GitHub (robust defaults) |
+| [`configs/examples/jira-github.lean.yaml`](configs/examples/jira-github.lean.yaml) | Max token savings — tight budgets, no redistill |
 | [`configs/examples/jira-github.draft-pr-rich.yaml`](configs/examples/jira-github.draft-pr-rich.yaml) | Richer PR body + sample helm-style verify profile |
 | [`configs/examples/jira-github.dry-run.yaml`](configs/examples/jira-github.dry-run.yaml) | Discovery/plan only (no mutations) |
 | [`configs/examples/config.work.yaml.example`](configs/examples/config.work.yaml.example) | Template for **private** work override |
@@ -166,11 +167,12 @@ Full field reference: [docs/configuration.md](docs/configuration.md)
 ### 1. Dry-run a ticket (recommended first)
 
 ```text
-# ensure guardrails.dry_run: true  OR use the dry-run example config
-implement PROJ-123
+@orbit implement PROJ-123
 ```
 
-Invoke with the **orbit** skill. Expect: `distill.md` / `brief.json` with AC, repos, and test strategy — **no** Jira transitions and **no** PRs.
+Use `@orbit` (skill has `disable-model-invocation`). For lowest token use, copy [`jira-github.lean.yaml`](configs/examples/jira-github.lean.yaml) or set `guardrails.dry_run: true`.
+
+Expect: `distill.md` / `brief.json` with AC, repos, and test strategy — **no** Jira transitions and **no** PRs.
 
 ### 2. Full run
 
@@ -235,10 +237,11 @@ See [docs/work-validation.md](docs/work-validation.md).
 
 | Concern | Mechanism |
 |---|---|
-| Fewer AI tokens | `efficiency.layered_loops`, reuse fresh `distill.md`, `max_doc_pages`, `compact_context`, `max_redistills` |
+| Fewer AI tokens | `jira-github.lean.yaml`, `efficiency.lean_context`, `skip_confluence_if_no_links`, `max_doc_pages: 3`, `max_redistills: 0` (lean), `@orbit` only |
+| Thin tickets | Discovery cascade infers AC/repos; `confidence` + mandatory plan approval when not `high` |
 | Hard spend caps | `guardrails.max_agent_steps`, `max_total_tool_calls`, `max_verify_retries` |
-| Safety | `disallow_merge`, dry-run, repo allowlist, secret redaction |
-| Org testing | `verify.profiles` + runbook-first — never assume `make test` only |
+| Safety | `disallow_merge`, dry-run, repo allowlist, secret redaction, plan gate on low confidence |
+| Org testing | `verify.profiles` + runbook-first; inferred light strategy only after cascade |
 
 ---
 
@@ -259,7 +262,7 @@ See [docs/work-validation.md](docs/work-validation.md).
 ## Limitations
 
 - v1 is **Cursor-hosted** (loop runs while an Agent chat is active) — not a background daemon
-- Quality depends on ticket + runbook clarity and MCP reliability
+- Quality depends on ticket clarity; thin tickets are **best-effort** — human plan approval is the safety rail
 - Heavy cluster verify (helm/k8s) defaults to **human-executed** steps unless you set `agent_may_execute: true`
 - Not affiliated with Atlassian, Cursor, or GitHub
 

@@ -4,25 +4,14 @@ workspace:
   root: ~/Documents/codebase
   runs_dir: .orbit/runs
   clone_if_missing: true
-  default_branch_strategy: repo_default
 
 tracker:
   provider: jira
-  transition_enabled: true
+  transition_enabled: false
   status_map:
     start: "In Progress"
     local_test: "Local Test"
     pr_review: "PR Review"
-    blocked: "Blocked"
-  comment_templates:
-    start: |
-      Orbit starting work on {{ticket}}.
-      {{brief_summary}}
-    blocked: |
-      Orbit blocked on {{ticket}}: {{reason}}
-    pr_ready: |
-      Draft PR(s) ready for review on {{ticket}}:
-      {{prs}}
 
 docs:
   provider: confluence
@@ -31,24 +20,15 @@ docs:
 
 forge:
   provider: github
-  branch_template: "{{ticket}}/{{short-slug}}"
   pr:
     draft: true
     labels: []
-    add_ticket_link: true
     title_template: "{{ticket}}: {{summary}}"
     body_template: |
-      ## Jira
-      {{ticket_url}}
-
       ## Summary
       {{summary}}
-
       ## Test plan
       {{test_plan}}
-
-      ## Screenshots
-      {{screenshots_section}}
 
 discovery:
   require_ac: false
@@ -65,7 +45,6 @@ verify:
   default_profile: unit_local
   profiles:
     unit_local:
-      description: Local unit/integration commands
       kind: local_commands
       commands: ["make test"]
       agent_may_execute: true
@@ -73,7 +52,7 @@ verify:
 
 efficiency:
   layered_loops: true
-  max_redistills: 1
+  max_redistills: 0
   reuse_distill_if_fresh_hours: 24
   max_doc_pages: 3
   compact_context: true
@@ -82,13 +61,9 @@ efficiency:
   stop_on_repeated_tool_error: true
 
 guardrails:
-  max_agent_steps: 80
-  max_total_tool_calls: 120
-  max_verify_retries: 3
+  max_agent_steps: 50
+  max_total_tool_calls: 80
+  max_verify_retries: 1
   dry_run: false
   disallow_merge: true
-  plan_approval: on_multi_repo
-  redact_secret_patterns:
-    - "ghp_[A-Za-z0-9]+"
-    - "AKIA[0-9A-Z]+"
-    - "Bearer [A-Za-z0-9._\\-]+"
+  plan_approval: always

@@ -38,11 +38,15 @@
 ## Confidence
 ```
 
-Keep it short enough to reload cheaply in the execute loop. Do not paste entire Confluence pages — summarize.
+Keep it **≤ ~40 lines**. Do not paste entire Confluence pages — summarize. URLs only under Doc sources.
 
 ## brief.json
 
-Must validate against `schemas/brief.schema.json`. Always include `test_strategy`.
+Must validate against `schemas/brief.schema.json`. Always include `test_strategy`, `confidence`, and `discovery_source`.
+
+## Lean context
+
+When `efficiency.lean_context` is true, the execute loop reloads `brief.json` + `plan.md` only (not full `distill.md`) unless replanning.
 
 ## run.json
 

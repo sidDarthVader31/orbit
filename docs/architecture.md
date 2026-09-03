@@ -19,7 +19,7 @@ Orbit is not a one-shot “two-pass pipeline.” It uses **nested loops**:
 | Loop | Role |
 |---|---|
 | **Outer** | `run.json` phase machine |
-| **Distill** | Research until `brief.json` validates or fail closed |
+| **Distill** | Research until `brief.json` validates or cascade exhausts (Confluence → ticket → infer → codebase) |
 | **Execute** | Implement → verify with observe/retry |
 | **Replan** | Budgeted return to distill on context gap (`max_redistills`) |
 
@@ -31,7 +31,17 @@ Ticket goal
         → (optional) Replan → Distill again if context gap
 ```
 
-Compressed memory (`distill.md` / `brief.json`) keeps the execute loop cheap: reload artifacts instead of re-crawling docs every turn.
+Compressed memory (`distill.md` / `brief.json`) keeps the execute loop cheap. With `efficiency.lean_context`, execute reads `brief.json` + `plan.md` only unless replanning.
+
+## Thin-ticket robustness
+
+When Confluence/runbook is missing, Orbit does not stop at `BRIEF_INCOMPLETE` by default:
+
+1. Infer AC from title/description (`discovery.infer_from_title`)
+2. Discover repos via codebase search (`discovery.codebase_fallback`)
+3. Proceed with `confidence: medium|low` and mandatory plan approval (`discovery.thin_ticket_plan_approval`)
+
+Only block when title/description are empty **and** codebase explore finds zero plausible targets.
 
 ## Outer phase machine
 
